@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Displaying URL Text</title>
+</head>
+<body>
+
+    <h1>Welcome!</h1>
+    <p>The text from the URL is: <span id="displayText"></span></p>
+
+    <script>
+        // 1. Get the full URL query string (the part starting with '?')
+        const params = new URLSearchParams(window.location.search);
+
+        // 2. Get the value of the parameter named 'text'
+        const urlText = params.get('text');
+
+        // 3. Find the element where the text should be displayed
+        const displayElement = document.getElementById('displayText');
+
+        // 4. Check if the 'text' parameter exists and display it
+        if (urlText) {
+            // Set the inner text of the span element to the value from the URL
+            displayElement.textContent = urlText;
+        } else {
+            // Display a default message if the parameter is missing
+            displayElement.textContent = "No 'text' parameter found.";
+        }
+    </script>
+
+</body>
+</html>
