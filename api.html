@@ -1,36 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dynamic AI Image Generator</title>
+    <title>JSONP Endpoint</title>
 </head>
 <body>
-
-    <p id="statusMessage">Loading image...</p>
-    <script src="https://js.puter.com/v2/"></script>
-
     <script>
         // 1. Get the URL parameters
         const params = new URLSearchParams(window.location.search);
         
-        // 2. Extract the value of the 'prompt' parameter
-        // If it's missing, use a default value.
-        const dynamicPrompt = params.get('prompt') || "A detailed close-up of a golden retriever in a spacesuit";
+        // 2. Get the value of the 'text' parameter
+        const urlText = params.get('text') || "no text provided";
+        
+        // 3. Get the callback function name
+        const callbackName = params.get('callback');
 
-        // 3. Update the status message to show the prompt being used
-        document.getElementById('statusMessage').textContent = `Generating image for prompt: "${dynamicPrompt}"`;
+        // 4. Construct the JavaScript object (your 'API' response)
+        const responseObject = {
+            status: "success",
+            data_received: urlText,
+            timestamp: new Date().toISOString()
+        };
 
-        // 4. Call the AI function with the dynamic prompt
-        puter.ai.txt2img(dynamicPrompt, { model: "gpt-image-1" })
-            .then(imageElement => {
-                // Once the image is generated, append it to the body
-                document.body.appendChild(imageElement);
-                // Remove the initial status message
-                document.getElementById('statusMessage').remove();
-            })
-            .catch(error => {
-                console.error("Image generation failed:", error);
-                document.getElementById('statusMessage').textContent = `Error generating image. Check your API key or prompt.`;
-            });
+        // 5. Convert the object to a JSON string
+        const jsonString = JSON.stringify(responseObject);
+
+        // 6. Output the JSONP response: callbackName(jsonString)
+        if (callbackName) {
+            // Write the JSONP wrapper directly into the document
+            document.write(`${callbackName}(${jsonString});`);
+        } else {
+            // If no callback is specified, just display the JSON string
+            document.write(jsonString);
+        }
     </script>
 </body>
 </html>
